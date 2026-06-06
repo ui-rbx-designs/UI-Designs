@@ -524,7 +524,7 @@ function Hub:Page(name, iconKey)
 
 		function tabAPI:Section(title)
 			local s = mkLabel(scroll, string.upper(title), UDim2.new(1,0,0,18), nil, C.MUTED, 10, true, "Sec")
-			s.LetterSpacing = 1.5
+
 			return s
 		end
 
