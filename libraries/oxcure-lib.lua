@@ -2,8 +2,6 @@
      skidded by github.com/ui-rbx-designs
      ts chatgpt bro :sob:
 ]]--
-
-
 local Players          = game:GetService("Players")
 local TweenService     = game:GetService("TweenService")
 local UserInputService = game:GetService("UserInputService")
@@ -93,8 +91,11 @@ local function newLabel(parent, text, size, pos, color, fs, bold, name)
 	l.Text                   = text  or ""
 	l.TextColor3             = color or C.TEXT
 	l.TextSize               = fs    or 13
-	l.Font                   = bold and Enum.Font.GothamBold or Enum.Font.Gotham
+	l.FontFace               = bold
+	                           and Font.fromName("BuilderSans", Enum.FontWeight.Bold)
+	                           or  Font.fromName("BuilderSans", Enum.FontWeight.Regular)
 	l.TextXAlignment         = Enum.TextXAlignment.Left
+	l.TextTruncate           = Enum.TextTruncate.AtEnd
 	l.Name                   = name  or "Label"
 	l.Parent                 = parent
 	return l
@@ -109,7 +110,7 @@ local function newBtn(parent, text, size, pos, bg, tc, name)
 	b.Text             = text or ""
 	b.TextColor3       = tc   or C.TEXT
 	b.TextSize         = 13
-	b.Font             = Enum.Font.Gotham
+	b.FontFace         = Font.fromName("BuilderSans", Enum.FontWeight.Regular)
 	b.TextXAlignment   = Enum.TextXAlignment.Left
 	b.AutoButtonColor  = false
 	b.Name             = name or "Btn"
@@ -268,6 +269,7 @@ local function newDropdown(scroll, label, opts, def, cb)
 	local dBtn = newBtn(row, sel.." >", UDim2.new(0,120,0,24), UDim2.new(1,-120,0.5,-12), C.DROP_BG, C.TEXT, "D")
 	dBtn.TextXAlignment = Enum.TextXAlignment.Center
 	dBtn.TextSize = 12
+	dBtn.FontFace = Font.fromName("BuilderSans", Enum.FontWeight.Regular)
 	corn(dBtn, 4)
 	strk(dBtn, C.BORDER, 1)
 	local open, dl = false, nil
@@ -283,6 +285,7 @@ local function newDropdown(scroll, label, opts, def, cb)
 				local it = newBtn(dl, o, UDim2.new(1,0,0,26), nil, C.DROP_BG, C.TEXT, "I")
 				it.TextXAlignment = Enum.TextXAlignment.Center
 				it.TextSize = 12
+				it.FontFace = Font.fromName("BuilderSans", Enum.FontWeight.Regular)
 				it.ZIndex   = 31
 				it.MouseButton1Click:Connect(function()
 					sel = o
@@ -311,6 +314,7 @@ local function newMultiDropdown(scroll, label, opts, cb)
 	local dBtn = newBtn(row, countText(), UDim2.new(0,130,0,24), UDim2.new(1,-130,0.5,-12), C.DROP_BG, C.TEXT, "D")
 	dBtn.TextXAlignment = Enum.TextXAlignment.Center
 	dBtn.TextSize = 12
+	dBtn.FontFace = Font.fromName("BuilderSans", Enum.FontWeight.Regular)
 	corn(dBtn, 4)
 	strk(dBtn, C.BORDER, 1)
 	local open, dl = false, nil
@@ -486,7 +490,8 @@ local function pushNotif(title, text, duration, accent)
 	local fill = newFrame(prog, UDim2.new(1,0,1,0), nil, accent or C.ACCENT, "Fill")
 
 	local xBtn = newBtn(notif, "x", UDim2.new(0,18,0,18), UDim2.new(1,-24,0,8), C.NOTIF_BG, C.MUTED, "X")
-	xBtn.TextSize       = 10
+	xBtn.TextSize       = 11
+	xBtn.FontFace       = Font.fromName("BuilderSans", Enum.FontWeight.Bold)
 	xBtn.TextXAlignment = Enum.TextXAlignment.Center
 
 	local dismissed = false
@@ -509,6 +514,8 @@ function Lib:Window(title, subtitle, key)
 	local gui = Instance.new("ScreenGui")
 	gui.Name           = "HubGui"
 	gui.ResetOnSpawn   = false
+	gui.DisplayOrder   = 10
+	gui.IgnoreGuiInset = true
 	gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 	gui.Parent         = PG
 
@@ -747,7 +754,7 @@ function Lib:Window(title, subtitle, key)
 			local tBtn = newBtn(tabBar, tabName, UDim2.new(0,88,1,0), nil, C.TABBAR, C.MUTED, "T"..tabName)
 			tBtn.TextXAlignment = Enum.TextXAlignment.Center
 			tBtn.TextSize       = 12
-			tBtn.Font           = Enum.Font.GothamMedium
+			tBtn.FontFace       = Font.fromName("BuilderSans", Enum.FontWeight.SemiBold)
 			tBtn.LayoutOrder    = #tabList + 1
 
 			local ul = newFrame(tBtn, UDim2.new(0,0,0,2), UDim2.new(0.5,0,1,-2), C.ACCENT, "UL")
@@ -789,7 +796,8 @@ function Lib:Window(title, subtitle, key)
 			local tabAPI = {}
 
 			function tabAPI:Section(sectionTitle)
-				newLabel(sc, "> " .. string.upper(sectionTitle), UDim2.new(1,0,0,16), nil, C.MUTED, 10, true, "Sec")
+				local sec = newLabel(sc, "> " .. string.upper(sectionTitle), UDim2.new(1,0,0,18), nil, C.MUTED, 11, true, "Sec")
+				sec.TextTruncate = Enum.TextTruncate.None
 			end
 
 			function tabAPI:Toggle(lbl, default, cb)
