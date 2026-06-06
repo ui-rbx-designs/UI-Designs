@@ -2,6 +2,10 @@
      skidded by github.com/ui-rbx-designs
      ts chatgpt bro :sob:
 ]]--
+--[[ 
+     skidded by github.com/ui-rbx-designs
+     ts chatgpt bro :sob:
+]]--
 local Players          = game:GetService("Players")
 local TweenService     = game:GetService("TweenService")
 local UserInputService = game:GetService("UserInputService")
@@ -263,7 +267,7 @@ end
 local function newDropdown(scroll, label, opts, def, cb)
 	local row  = newRow(scroll, label)
 	local sel  = def or opts[1]
-	local dBtn = newBtn(row, sel.."  ▾", UDim2.new(0,120,0,24), UDim2.new(1,-120,0.5,-12), C.DROP_BG, C.TEXT, "D")
+	local dBtn = newBtn(row, sel.." >", UDim2.new(0,120,0,24), UDim2.new(1,-120,0.5,-12), C.DROP_BG, C.TEXT, "D")
 	dBtn.TextXAlignment = Enum.TextXAlignment.Center
 	dBtn.TextSize = 12
 	corn(dBtn, 4)
@@ -284,7 +288,7 @@ local function newDropdown(scroll, label, opts, def, cb)
 				it.ZIndex   = 31
 				it.MouseButton1Click:Connect(function()
 					sel = o
-					dBtn.Text = o .. "  ▾"
+					dBtn.Text = o .. " >"
 					if dl then dl:Destroy() dl = nil end
 					open = false
 					if cb then cb(o) end
@@ -304,7 +308,7 @@ local function newMultiDropdown(scroll, label, opts, cb)
 	local function countText()
 		local n = 0
 		for _ in pairs(selected) do n += 1 end
-		return (n == 0 and "None" or n .. " Selected") .. "  ▾"
+		return (n == 0 and "None" or n .. " Selected") .. " >"
 	end
 	local dBtn = newBtn(row, countText(), UDim2.new(0,130,0,24), UDim2.new(1,-130,0.5,-12), C.DROP_BG, C.TEXT, "D")
 	dBtn.TextXAlignment = Enum.TextXAlignment.Center
@@ -368,17 +372,19 @@ local function newColorPicker(scroll, label, defaultHex, cb)
 	local g   = tonumber(hex:sub(3,4), 16) / 255
 	local b   = tonumber(hex:sub(5,6), 16) / 255
 	local row  = newRow(scroll, label)
-	local prev = newFrame(row, UDim2.new(0,20,0,20), UDim2.new(1,-24,0.5,-10), Color3.fromRGB(r*255,g*255,b*255), "Prev")
+	local prev = newFrame(row, UDim2.new(0,20,0,20), UDim2.new(1,-24,0.5,-10), Color3.new(r,g,b), "Prev")
 	corn(prev, 5)
 	strk(prev, C.BORDER, 1)
 	local pBtn = newBtn(row, "", UDim2.new(0,20,0,20), UDim2.new(1,-24,0.5,-10), C.SURFACE, C.WHITE, "PBtn")
 	pBtn.BackgroundTransparency = 1
 	pBtn.ZIndex = prev.ZIndex + 1
 	local open, panel = false, nil
+	local bigPrev = nil  -- upvalue so refresh() can always reach it
 
 	local function refresh()
 		local col = Color3.fromRGB(math.round(r*255), math.round(g*255), math.round(b*255))
 		prev.BackgroundColor3 = col
+		if bigPrev and bigPrev.Parent then bigPrev.BackgroundColor3 = col end
 		if cb then cb(col) end
 	end
 
@@ -431,19 +437,15 @@ local function newColorPicker(scroll, label, defaultHex, cb)
 			panel.ZIndex = 30
 			corn(panel, 8)
 			strk(panel, C.BORDER, 1)
-			local bigPrev = newFrame(panel, UDim2.new(0,24,0,24), UDim2.new(1,-30,0,6), prev.BackgroundColor3, "BP")
+			bigPrev = newFrame(panel, UDim2.new(0,24,0,24), UDim2.new(1,-30,0,6), prev.BackgroundColor3, "BP")
 			corn(bigPrev, 6)
 			bigPrev.ZIndex = 31
-			local origCb = cb
-			cb = function(col)
-				bigPrev.BackgroundColor3 = col
-				if origCb then origCb(col) end
-			end
 			rgbSlider(panel, "R", r, 6)
 			rgbSlider(panel, "G", g, 44)
 			rgbSlider(panel, "B", b, 82)
 		else
 			if panel then panel:Destroy() panel = nil end
+			bigPrev = nil
 		end
 	end)
 end
@@ -485,7 +487,7 @@ local function pushNotif(title, text, duration, accent)
 	local prog = newFrame(notif, UDim2.new(1,0,0,2), UDim2.new(0,0,1,-2), C.BORDER, "Prog")
 	local fill = newFrame(prog, UDim2.new(1,0,1,0), nil, accent or C.ACCENT, "Fill")
 
-	local xBtn = newBtn(notif, "✕", UDim2.new(0,18,0,18), UDim2.new(1,-24,0,8), C.NOTIF_BG, C.MUTED, "X")
+	local xBtn = newBtn(notif, "x", UDim2.new(0,18,0,18), UDim2.new(1,-24,0,8), C.NOTIF_BG, C.MUTED, "X")
 	xBtn.TextSize       = 10
 	xBtn.TextXAlignment = Enum.TextXAlignment.Center
 
@@ -789,7 +791,7 @@ function Lib:Window(title, subtitle, key)
 			local tabAPI = {}
 
 			function tabAPI:Section(sectionTitle)
-				newLabel(sc, "• " .. string.upper(sectionTitle), UDim2.new(1,0,0,16), nil, C.MUTED, 10, true, "Sec")
+				newLabel(sc, "> " .. string.upper(sectionTitle), UDim2.new(1,0,0,16), nil, C.MUTED, 10, true, "Sec")
 			end
 
 			function tabAPI:Toggle(lbl, default, cb)
