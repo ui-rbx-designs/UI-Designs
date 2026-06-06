@@ -11,27 +11,27 @@ local LP = Players.LocalPlayer
 local PG = LP:WaitForChild("PlayerGui")
 
 local ICONS = {
-	sword                = "rbxassetid://7733765224",
-	["person-standing"]  = "rbxassetid://7743871002",
-	eye                  = "rbxassetid://7733771982",
-	["scan-line"]        = "rbxassetid://8997386772",
-	palette              = "rbxassetid://7734021680",
-	settings             = "rbxassetid://7734053495",
+	sword                  = "rbxassetid://7733765224",
+	["person-standing"]    = "rbxassetid://7743871002",
+	eye                    = "rbxassetid://7733771982",
+	["scan-line"]          = "rbxassetid://8997386772",
+	palette                = "rbxassetid://7734021680",
+	settings               = "rbxassetid://7734053495",
 	["sliders-horizontal"] = "rbxassetid://7734058345",
-	home                 = "rbxassetid://7733960981",
-	star                 = "rbxassetid://7734068321",
-	info                 = "rbxassetid://7733964719",
-	target               = "rbxassetid://7743872758",
-	terminal             = "rbxassetid://7743872929",
-	save                 = "rbxassetid://7734052335",
-	user                 = "rbxassetid://7743875503",
-	["alert-triangle"]   = "rbxassetid://7733658504",
-	copy                 = "rbxassetid://7733764083",
-	zap                  = "rbxassetid://7733771563",
-	hash                 = "rbxassetid://7733955906",
-	shield               = "rbxassetid://7734056411",
-	layers               = "rbxassetid://7733965313",
-	crosshair            = "rbxassetid://7743872758",
+	home                   = "rbxassetid://7733960981",
+	star                   = "rbxassetid://7734068321",
+	info                   = "rbxassetid://7733964719",
+	target                 = "rbxassetid://7743872758",
+	terminal               = "rbxassetid://7743872929",
+	save                   = "rbxassetid://7734052335",
+	user                   = "rbxassetid://7743875503",
+	["alert-triangle"]     = "rbxassetid://7733658504",
+	copy                   = "rbxassetid://7733764083",
+	zap                    = "rbxassetid://7733771563",
+	hash                   = "rbxassetid://7733955906",
+	shield                 = "rbxassetid://7734056411",
+	layers                 = "rbxassetid://7733965313",
+	crosshair              = "rbxassetid://7743872758",
 }
 
 local C = {
@@ -85,16 +85,16 @@ end
 
 local function newLabel(parent, text, size, pos, color, fs, bold, name)
 	local l = Instance.new("TextLabel")
-	l.Size             = size  or UDim2.new(1,0,0,20)
-	l.Position         = pos   or UDim2.new(0,0,0,0)
+	l.Size                   = size  or UDim2.new(1,0,0,20)
+	l.Position               = pos   or UDim2.new(0,0,0,0)
 	l.BackgroundTransparency = 1
-	l.Text             = text  or ""
-	l.TextColor3       = color or C.TEXT
-	l.TextSize         = fs    or 13
-	l.Font             = bold and Enum.Font.GothamBold or Enum.Font.Gotham
-	l.TextXAlignment   = Enum.TextXAlignment.Left
-	l.Name             = name  or "Label"
-	l.Parent           = parent
+	l.Text                   = text  or ""
+	l.TextColor3             = color or C.TEXT
+	l.TextSize               = fs    or 13
+	l.Font                   = bold and Enum.Font.GothamBold or Enum.Font.Gotham
+	l.TextXAlignment         = Enum.TextXAlignment.Left
+	l.Name                   = name  or "Label"
+	l.Parent                 = parent
 	return l
 end
 
@@ -117,13 +117,13 @@ end
 
 local function newImg(parent, key, sz)
 	local i = Instance.new("ImageLabel")
-	i.Size             = UDim2.new(0, sz or 16, 0, sz or 16)
+	i.Size                   = UDim2.new(0, sz or 16, 0, sz or 16)
 	i.BackgroundTransparency = 1
-	i.Image            = ICONS[key] or ""
-	i.ImageColor3      = C.MUTED
-	i.ScaleType        = Enum.ScaleType.Fit
-	i.Name             = "Icon"
-	i.Parent           = parent
+	i.Image                  = ICONS[key] or ""
+	i.ImageColor3            = C.MUTED
+	i.ScaleType              = Enum.ScaleType.Fit
+	i.Name                   = "Icon"
+	i.Parent                 = parent
 	return i
 end
 
@@ -136,10 +136,10 @@ end
 
 local function strk(p, col, t)
 	local s = Instance.new("UIStroke")
-	s.Color = col or C.BORDER
-	s.Thickness = t or 1
+	s.Color           = col or C.BORDER
+	s.Thickness       = t   or 1
 	s.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-	s.Parent = p
+	s.Parent          = p
 	return s
 end
 
@@ -211,7 +211,7 @@ local function newToggle(parent, row, default, cb)
 		state = not state
 		tw(track, TW.FAST, {BackgroundColor3 = state and C.ACCENT_DIM or C.TOFF})
 		tw(thumb, TW.FAST, {
-			Position        = UDim2.new(0, state and 19 or 3, 0.5, -7),
+			Position         = UDim2.new(0, state and 19 or 3, 0.5, -7),
 			BackgroundColor3 = state and C.ACCENT or C.TTHUMB,
 		})
 		if cb then cb(state) end
@@ -223,12 +223,12 @@ local function newSlider(scroll, label, minV, maxV, defV, suffix, cb)
 	corn(wrap, 7)
 	strk(wrap, C.BORDER, 1)
 	pad(wrap, 8, 10, 8, 10)
-	local hdr = newFrame(wrap, UDim2.new(1,0,0,18), nil, C.SURFACE, "H")
-	local lbl = newLabel(hdr, label, UDim2.new(0.7,0,1,0), nil, C.TEXT, 13)
+	local hdr  = newFrame(wrap, UDim2.new(1,0,0,18), nil, C.SURFACE, "H")
+	local lbl  = newLabel(hdr, label, UDim2.new(0.7,0,1,0), nil, C.TEXT, 13)
 	lbl.TextYAlignment = Enum.TextYAlignment.Center
 	local vLbl = newLabel(hdr, tostring(defV)..(suffix or ""), UDim2.new(0.3,0,1,0), UDim2.new(0.7,0,0,0), C.ACCENT, 13, true, "Val")
 	vLbl.TextXAlignment = Enum.TextXAlignment.Right
-	local trk = newFrame(wrap, UDim2.new(1,0,0,4), UDim2.new(0,0,1,-4), Color3.fromHex("222232"), "T")
+	local trk  = newFrame(wrap, UDim2.new(1,0,0,4), UDim2.new(0,0,1,-4), Color3.fromHex("222232"), "T")
 	corn(trk, 2)
 	local fill = newFrame(trk, UDim2.new((defV-minV)/(maxV-minV),0,1,0), nil, C.ACCENT, "F")
 	corn(fill, 2)
@@ -238,9 +238,9 @@ local function newSlider(scroll, label, minV, maxV, defV, suffix, cb)
 	local function update(x)
 		local ratio = math.clamp((x - trk.AbsolutePosition.X) / trk.AbsoluteSize.X, 0, 1)
 		local val   = math.round(minV + ratio * (maxV - minV))
-		fill.Size         = UDim2.new(ratio, 0, 1, 0)
-		knob.Position     = UDim2.new(ratio, -7, 0.5, -7)
-		vLbl.Text         = tostring(val) .. (suffix or "")
+		fill.Size     = UDim2.new(ratio, 0, 1, 0)
+		knob.Position = UDim2.new(ratio, -7, 0.5, -7)
+		vLbl.Text     = tostring(val) .. (suffix or "")
 		if cb then cb(val) end
 	end
 	local db = newBtn(trk, "", UDim2.new(1,0,1,14), UDim2.new(0,0,0,-7), C.SURFACE, C.WHITE, "D")
@@ -289,7 +289,7 @@ local function newDropdown(scroll, label, opts, def, cb)
 					open = false
 					if cb then cb(o) end
 				end)
-				it.MouseEnter:Connect(function() tw(it, TW.SNAP, {BackgroundColor3 = C.HOVER}) end)
+				it.MouseEnter:Connect(function() tw(it, TW.SNAP, {BackgroundColor3 = C.HOVER})    end)
 				it.MouseLeave:Connect(function() tw(it, TW.SNAP, {BackgroundColor3 = C.DROP_BG}) end)
 			end
 		else
@@ -340,7 +340,7 @@ local function newMultiDropdown(scroll, label, opts, cb)
 				local ib = newBtn(ir, "", UDim2.new(1,0,1,0), nil, C.DROP_BG, C.WHITE, "IB")
 				ib.BackgroundTransparency = 1
 				ib.ZIndex = 33
-				ib.MouseEnter:Connect(function() tw(ir, TW.SNAP, {BackgroundColor3 = C.HOVER}) end)
+				ib.MouseEnter:Connect(function() tw(ir, TW.SNAP, {BackgroundColor3 = C.HOVER})    end)
 				ib.MouseLeave:Connect(function() tw(ir, TW.SNAP, {BackgroundColor3 = C.DROP_BG}) end)
 				ib.MouseButton1Click:Connect(function()
 					if selected[o] then
@@ -363,10 +363,10 @@ local function newMultiDropdown(scroll, label, opts, cb)
 end
 
 local function newColorPicker(scroll, label, defaultHex, cb)
-	local hex  = defaultHex or "2563eb"
-	local r    = tonumber(hex:sub(1,2), 16) / 255
-	local g    = tonumber(hex:sub(3,4), 16) / 255
-	local b    = tonumber(hex:sub(5,6), 16) / 255
+	local hex = defaultHex or "2563eb"
+	local r   = tonumber(hex:sub(1,2), 16) / 255
+	local g   = tonumber(hex:sub(3,4), 16) / 255
+	local b   = tonumber(hex:sub(5,6), 16) / 255
 	local row  = newRow(scroll, label)
 	local prev = newFrame(row, UDim2.new(0,20,0,20), UDim2.new(1,-24,0.5,-10), Color3.fromRGB(r*255,g*255,b*255), "Prev")
 	corn(prev, 5)
@@ -464,12 +464,12 @@ pad(notifHolder, 0, 0, 12, 0)
 
 local function pushNotif(title, text, duration, accent)
 	local notif = Instance.new("CanvasGroup")
-	notif.Size             = UDim2.new(1,0,0,72)
-	notif.BackgroundColor3 = C.NOTIF_BG
-	notif.BorderSizePixel  = 0
+	notif.Size              = UDim2.new(1,0,0,72)
+	notif.BackgroundColor3  = C.NOTIF_BG
+	notif.BorderSizePixel   = 0
 	notif.GroupTransparency = 1
-	notif.Name             = "Notif"
-	notif.Parent           = notifHolder
+	notif.Name              = "Notif"
+	notif.Parent            = notifHolder
 	corn(notif, 8)
 	strk(notif, C.BORDER, 1)
 
@@ -523,10 +523,10 @@ function Lib:Window(title, subtitle, key)
 	corn(loadCanvas, 12)
 	strk(loadCanvas, C.BORDER, 1)
 
-	newLabel(loadCanvas, title or "Hub", UDim2.new(1,-80,0,36), UDim2.new(0,20,0,8), C.WHITE, 15, true, "LT")
+	newLabel(loadCanvas, title or "Hub", UDim2.new(1,-80,0,36), UDim2.new(0,20,0,8),  C.WHITE, 15, true,  "LT")
 	newLabel(loadCanvas, subtitle or "", UDim2.new(1,-80,0,22), UDim2.new(0,20,0,48), C.MUTED, 12, false, "LS")
 
-	local dots = newLabel(loadCanvas, "...", UDim2.new(0,50,0,36), UDim2.new(1,-62,0,8), C.ACCENT, 15, true, "LD")
+	local dots = newLabel(loadCanvas, ".", UDim2.new(0,50,0,36), UDim2.new(1,-62,0,8), C.ACCENT, 15, true, "LD")
 	dots.TextXAlignment = Enum.TextXAlignment.Right
 
 	local dotThread = task.spawn(function()
@@ -539,12 +539,13 @@ function Lib:Window(title, subtitle, key)
 		end
 	end)
 
-	local NORM_SIZE = UDim2.new(0,700,0,500)
-	local NORM_POS  = UDim2.new(0.5,-350,0.5,-250)
+	local NORM_W, NORM_H = 700, 500
+	local NORM_SIZE = UDim2.new(0, NORM_W, 0, NORM_H)
+	local NORM_POS  = UDim2.new(0.5, -NORM_W/2, 0.5, -NORM_H/2)
 
 	local winCanvas = Instance.new("CanvasGroup")
-	winCanvas.Size             = NORM_SIZE
-	winCanvas.Position         = NORM_POS
+	winCanvas.Size             = UDim2.new(1, 0, 1, 0)
+	winCanvas.Position         = UDim2.new(0, 0, 0, 0)
 	winCanvas.BackgroundTransparency = 1
 	winCanvas.BorderSizePixel  = 0
 	winCanvas.GroupTransparency = 1
@@ -552,7 +553,7 @@ function Lib:Window(title, subtitle, key)
 	winCanvas.Name             = "Canvas"
 	winCanvas.Parent           = gui
 
-	local win = newFrame(winCanvas, UDim2.new(1,0,1,0), nil, C.BG, "Win")
+	local win = newFrame(winCanvas, NORM_SIZE, NORM_POS, C.BG, "Win")
 	win.ClipsDescendants = true
 	corn(win, 14)
 	strk(win, C.BORDER, 1)
@@ -562,8 +563,8 @@ function Lib:Window(title, subtitle, key)
 	local titleLbl = newLabel(titlebar, "", UDim2.new(1,-90,1,0), UDim2.new(0,14,0,0), C.MUTED, 12, false, "TL")
 	titleLbl.TextYAlignment = Enum.TextYAlignment.Center
 
-	local visible     = true
-	local fullscreen  = false
+	local visible    = true
+	local fullscreen = false
 	local savedSize, savedPos
 
 	local function doClose()
@@ -573,11 +574,11 @@ function Lib:Window(title, subtitle, key)
 
 	local function doFullscreen()
 		if not fullscreen then
-			savedSize = winCanvas.Size
-			savedPos  = winCanvas.Position
-			tw(winCanvas, TW.FULL, {Size = UDim2.new(1,0,1,0), Position = UDim2.new(0,0,0,0)})
+			savedSize = win.Size
+			savedPos  = win.Position
+			tw(win, TW.FULL, {Size = UDim2.new(1,0,1,0), Position = UDim2.new(0,0,0,0)})
 		else
-			tw(winCanvas, TW.FULL, {Size = savedSize, Position = savedPos})
+			tw(win, TW.FULL, {Size = savedSize, Position = savedPos})
 		end
 		fullscreen = not fullscreen
 	end
@@ -586,9 +587,10 @@ function Lib:Window(title, subtitle, key)
 		visible = not visible
 		if visible then
 			winCanvas.Visible = true
-			winCanvas.Size    = UDim2.new(0, NORM_SIZE.X.Offset*0.95, 0, NORM_SIZE.Y.Offset*0.95)
-			winCanvas.Position = NORM_POS
-			tw(winCanvas, TW.OPEN, {GroupTransparency = 0, Size = NORM_SIZE})
+			win.Size     = UDim2.new(0, NORM_W*0.95, 0, NORM_H*0.95)
+			win.Position = UDim2.new(0.5, -(NORM_W*0.95)/2, 0.5, -(NORM_H*0.95)/2)
+			tw(winCanvas, TW.OPEN, {GroupTransparency = 0})
+			tw(win, TW.OPEN, {Size = NORM_SIZE, Position = NORM_POS})
 		else
 			tw(winCanvas, TW.CLOSE, {GroupTransparency = 1})
 			task.delay(0.22, function() winCanvas.Visible = false end)
@@ -601,8 +603,8 @@ function Lib:Window(title, subtitle, key)
 		local hit = newBtn(dot, "", UDim2.new(1,0,1,0), nil, col, C.WHITE, "Hit")
 		hit.BackgroundTransparency = 1
 		hit.ZIndex = dot.ZIndex + 1
-		hit.MouseEnter:Connect(function() tw(dot, TW.SNAP, {BackgroundTransparency = 0.4}) end)
-		hit.MouseLeave:Connect(function() tw(dot, TW.SNAP, {BackgroundTransparency = 0}) end)
+		hit.MouseEnter:Connect(function()  tw(dot, TW.SNAP, {BackgroundTransparency = 0.4}) end)
+		hit.MouseLeave:Connect(function()  tw(dot, TW.SNAP, {BackgroundTransparency = 0})   end)
 		hit.MouseButton1Click:Connect(fn)
 	end
 
@@ -617,8 +619,8 @@ function Lib:Window(title, subtitle, key)
 	dragHit.MouseButton1Down:Connect(function()
 		if fullscreen then return end
 		dragging = true
-		local m   = UserInputService:GetMouseLocation()
-		dragOff   = m - Vector2.new(winCanvas.AbsolutePosition.X, winCanvas.AbsolutePosition.Y)
+		local m = UserInputService:GetMouseLocation()
+		dragOff  = m - Vector2.new(win.AbsolutePosition.X, win.AbsolutePosition.Y)
 	end)
 	UserInputService.InputEnded:Connect(function(inp)
 		if inp.UserInputType == Enum.UserInputType.MouseButton1 then dragging = false end
@@ -626,7 +628,7 @@ function Lib:Window(title, subtitle, key)
 	UserInputService.InputChanged:Connect(function(inp)
 		if dragging and inp.UserInputType == Enum.UserInputType.MouseMovement then
 			local m = UserInputService:GetMouseLocation()
-			winCanvas.Position = UDim2.new(0, m.X - dragOff.X, 0, m.Y - dragOff.Y)
+			win.Position = UDim2.new(0, m.X - dragOff.X, 0, m.Y - dragOff.Y)
 		end
 	end)
 
@@ -654,7 +656,7 @@ function Lib:Window(title, subtitle, key)
 
 	local main = newFrame(win, UDim2.new(1,-145,1,-40), UDim2.new(0,145,0,40), C.BG, "Main")
 
-	local pages   = {}
+	local pages    = {}
 	local activePg = nil
 
 	tw(loadCanvas, TW.LOAD, {GroupTransparency = 0})
@@ -663,13 +665,11 @@ function Lib:Window(title, subtitle, key)
 		task.delay(0.28, function()
 			task.cancel(dotThread)
 			loadCanvas:Destroy()
-			winCanvas.Visible  = true
-			winCanvas.Size     = UDim2.new(0, NORM_SIZE.X.Offset*0.94, 0, NORM_SIZE.Y.Offset*0.94)
-			winCanvas.Position = UDim2.new(
-				NORM_POS.X.Scale, NORM_POS.X.Offset + NORM_SIZE.X.Offset * 0.03,
-				NORM_POS.Y.Scale, NORM_POS.Y.Offset + NORM_SIZE.Y.Offset * 0.03
-			)
-			tw(winCanvas, TW.OPEN, {GroupTransparency = 0, Size = NORM_SIZE, Position = NORM_POS})
+			winCanvas.Visible = true
+			win.Size     = UDim2.new(0, NORM_W*0.94, 0, NORM_H*0.94)
+			win.Position = UDim2.new(0.5, -(NORM_W*0.94)/2, 0.5, -(NORM_H*0.94)/2)
+			tw(winCanvas, TW.OPEN, {GroupTransparency = 0})
+			tw(win, TW.OPEN, {Size = NORM_SIZE, Position = NORM_POS})
 		end)
 	end)
 
@@ -702,7 +702,7 @@ function Lib:Window(title, subtitle, key)
 
 		local host = newFrame(content, UDim2.new(1,0,1,0), nil, C.BG, "Host")
 
-		local tabList  = {}
+		local tabList   = {}
 		local activeTab = nil
 
 		local function activatePage()
