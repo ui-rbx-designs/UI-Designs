@@ -2,84 +2,139 @@
      skidded by github.com/ui-rbx-designs
      ts chatgpt bro :sob:
 ]]--
-local Players       = game:GetService("Players")
-local TweenService  = game:GetService("TweenService")
+local Players          = game:GetService("Players")
+local TweenService     = game:GetService("TweenService")
 local UserInputService = game:GetService("UserInputService")
-local RunService    = game:GetService("RunService")
+local RunService       = game:GetService("RunService")
 
-local LocalPlayer = Players.LocalPlayer
-local PlayerGui   = LocalPlayer:WaitForChild("PlayerGui")
+local LP = Players.LocalPlayer
+local PG = LP:WaitForChild("PlayerGui")
 
-local RAW_ICONS = {
-	["sword"]              = "rbxassetid://7733765224",
-	["person-standing"]    = "rbxassetid://7743871002",
-	["eye"]                = "rbxassetid://7733771982",
-	["scan-line"]          = "rbxassetid://8997386772",
-	["palette"]            = "rbxassetid://7734021680",
-	["settings"]           = "rbxassetid://7734053495",
+local ICONS = {
+	sword                = "rbxassetid://7733765224",
+	["person-standing"]  = "rbxassetid://7743871002",
+	eye                  = "rbxassetid://7733771982",
+	["scan-line"]        = "rbxassetid://8997386772",
+	palette              = "rbxassetid://7734021680",
+	settings             = "rbxassetid://7734053495",
 	["sliders-horizontal"] = "rbxassetid://7734058345",
-	["home"]               = "rbxassetid://7733960981",
-	["star"]               = "rbxassetid://7734068321",
-	["info"]               = "rbxassetid://7733964719",
-	["target"]             = "rbxassetid://7743872758",
-	["terminal"]           = "rbxassetid://7743872929",
-	["book-open"]          = "rbxassetid://7733687281",
-	["save"]               = "rbxassetid://7734052335",
-	["refresh-cw"]         = "rbxassetid://7734051052",
-	["shield-check"]       = "rbxassetid://7734056411",
-	["user"]               = "rbxassetid://7743875503",
-	["alert-triangle"]     = "rbxassetid://7733658504",
-	["copy"]               = "rbxassetid://7733764083",
-	["log-out"]            = "rbxassetid://7733992677",
-	["crosshair"]          = "rbxassetid://7743872758",
-	["layers"]             = "rbxassetid://7733965313",
-	["cpu"]                = "rbxassetid://7743872929",
-	["zap"]                = "rbxassetid://7733771563",
-	["check"]              = "rbxassetid://7733715400",
-	["search"]             = "rbxassetid://7734052570",
-	["hash"]               = "rbxassetid://7733955906",
+	home                 = "rbxassetid://7733960981",
+	star                 = "rbxassetid://7734068321",
+	info                 = "rbxassetid://7733964719",
+	target               = "rbxassetid://7743872758",
+	terminal             = "rbxassetid://7743872929",
+	save                 = "rbxassetid://7734052335",
+	user                 = "rbxassetid://7743875503",
+	["alert-triangle"]   = "rbxassetid://7733658504",
+	copy                 = "rbxassetid://7733764083",
+	zap                  = "rbxassetid://7733771563",
+	hash                 = "rbxassetid://7733955906",
+	shield               = "rbxassetid://7734056411",
+	layers               = "rbxassetid://7733965313",
+	crosshair            = "rbxassetid://7743872758",
 }
 
 local C = {
-	BG         = Color3.fromHex("18181d"),
-	SIDEBAR    = Color3.fromHex("101014"),
-	SURFACE    = Color3.fromHex("101014"),
-	BORDER     = Color3.fromHex("27272f"),
+	BG         = Color3.fromHex("16161b"),
+	SIDEBAR    = Color3.fromHex("0f0f13"),
+	SURFACE    = Color3.fromHex("0f0f13"),
+	BORDER     = Color3.fromHex("232330"),
 	ACCENT     = Color3.fromHex("2563eb"),
-	ACCENT_DIM = Color3.fromHex("162040"),
+	ACCENT_DIM = Color3.fromHex("122040"),
 	TEXT       = Color3.fromHex("dcdce8"),
-	MUTED      = Color3.fromHex("55556a"),
-	HOVER      = Color3.fromHex("1c1c24"),
-	ACTIVE_BG  = Color3.fromHex("172040"),
+	MUTED      = Color3.fromHex("50506a"),
+	HOVER      = Color3.fromHex("1c1c26"),
+	ACTIVE     = Color3.fromHex("16203e"),
 	WHITE      = Color3.fromHex("ffffff"),
 	RED        = Color3.fromHex("ff5f57"),
 	YELLOW     = Color3.fromHex("febc2e"),
 	GREEN      = Color3.fromHex("28c840"),
-	TOFF       = Color3.fromHex("2a2a38"),
-	TTHUMB     = Color3.fromHex("55556a"),
-	TABBAR     = Color3.fromHex("141418"),
+	TOFF       = Color3.fromHex("252535"),
+	TTHUMB     = Color3.fromHex("50506a"),
+	TABBAR     = Color3.fromHex("111116"),
+	NOTIF_BG   = Color3.fromHex("1a1a22"),
+	SUCCESS    = Color3.fromHex("10b981"),
+	WARNING    = Color3.fromHex("f59e0b"),
+	ERR        = Color3.fromHex("ef4444"),
+	DROP_BG    = Color3.fromHex("141419"),
 }
 
 local TW = {
-	SNAP   = TweenInfo.new(0.12, Enum.EasingStyle.Quad,  Enum.EasingDirection.Out),
-	FAST   = TweenInfo.new(0.18, Enum.EasingStyle.Quad,  Enum.EasingDirection.Out),
-	MED    = TweenInfo.new(0.26, Enum.EasingStyle.Quad,  Enum.EasingDirection.Out),
-	OPEN   = TweenInfo.new(0.38, Enum.EasingStyle.Back,  Enum.EasingDirection.Out),
-	CLOSE  = TweenInfo.new(0.24, Enum.EasingStyle.Quad,  Enum.EasingDirection.In),
-	SLIDE  = TweenInfo.new(0.22, Enum.EasingStyle.Quint, Enum.EasingDirection.Out),
-	FULL   = TweenInfo.new(0.32, Enum.EasingStyle.Quint, Enum.EasingDirection.Out),
+	SNAP  = TweenInfo.new(0.1,  Enum.EasingStyle.Quad,  Enum.EasingDirection.Out),
+	FAST  = TweenInfo.new(0.18, Enum.EasingStyle.Quad,  Enum.EasingDirection.Out),
+	MED   = TweenInfo.new(0.25, Enum.EasingStyle.Quad,  Enum.EasingDirection.Out),
+	OPEN  = TweenInfo.new(0.38, Enum.EasingStyle.Back,  Enum.EasingDirection.Out),
+	CLOSE = TweenInfo.new(0.2,  Enum.EasingStyle.Quad,  Enum.EasingDirection.In),
+	FULL  = TweenInfo.new(0.3,  Enum.EasingStyle.Quint, Enum.EasingDirection.Out),
+	SLIDE = TweenInfo.new(0.28, Enum.EasingStyle.Quint, Enum.EasingDirection.Out),
+	LOAD  = TweenInfo.new(0.22, Enum.EasingStyle.Quad,  Enum.EasingDirection.InOut),
 }
 
-local function tw(obj, info, props) TweenService:Create(obj, info, props):Play() end
+local function tw(o, i, p) TweenService:Create(o, i, p):Play() end
 
-local function mkCorner(p, r)
+local function newFrame(parent, size, pos, color, name)
+	local f = Instance.new("Frame")
+	f.Size             = size  or UDim2.new(1,0,1,0)
+	f.Position         = pos   or UDim2.new(0,0,0,0)
+	f.BackgroundColor3 = color or C.BG
+	f.BorderSizePixel  = 0
+	f.Name             = name  or "Frame"
+	f.Parent           = parent
+	return f
+end
+
+local function newLabel(parent, text, size, pos, color, fs, bold, name)
+	local l = Instance.new("TextLabel")
+	l.Size             = size  or UDim2.new(1,0,0,20)
+	l.Position         = pos   or UDim2.new(0,0,0,0)
+	l.BackgroundTransparency = 1
+	l.Text             = text  or ""
+	l.TextColor3       = color or C.TEXT
+	l.TextSize         = fs    or 13
+	l.Font             = bold and Enum.Font.GothamBold or Enum.Font.Gotham
+	l.TextXAlignment   = Enum.TextXAlignment.Left
+	l.Name             = name  or "Label"
+	l.Parent           = parent
+	return l
+end
+
+local function newBtn(parent, text, size, pos, bg, tc, name)
+	local b = Instance.new("TextButton")
+	b.Size             = size or UDim2.new(1,0,0,30)
+	b.Position         = pos  or UDim2.new(0,0,0,0)
+	b.BackgroundColor3 = bg   or C.SURFACE
+	b.BorderSizePixel  = 0
+	b.Text             = text or ""
+	b.TextColor3       = tc   or C.TEXT
+	b.TextSize         = 13
+	b.Font             = Enum.Font.Gotham
+	b.TextXAlignment   = Enum.TextXAlignment.Left
+	b.AutoButtonColor  = false
+	b.Name             = name or "Btn"
+	b.Parent           = parent
+	return b
+end
+
+local function newImg(parent, key, sz)
+	local i = Instance.new("ImageLabel")
+	i.Size             = UDim2.new(0, sz or 16, 0, sz or 16)
+	i.BackgroundTransparency = 1
+	i.Image            = ICONS[key] or ""
+	i.ImageColor3      = C.MUTED
+	i.ScaleType        = Enum.ScaleType.Fit
+	i.Name             = "Icon"
+	i.Parent           = parent
+	return i
+end
+
+local function corn(p, r)
 	local c = Instance.new("UICorner")
 	c.CornerRadius = UDim.new(0, r or 8)
 	c.Parent = p
 	return c
 end
 
-local function mkStroke(p, col, t)
+local function strk(p, col, t)
 	local s = Instance.new("UIStroke")
 	s.Color = col or C.BORDER
 	s.Thickness = t or 1
@@ -88,188 +143,482 @@ local function mkStroke(p, col, t)
 	return s
 end
 
-local function mkPad(p, t, r, b, l)
-	local pad = Instance.new("UIPadding")
-	pad.PaddingTop    = UDim.new(0, t or 0)
-	pad.PaddingRight  = UDim.new(0, r or 0)
-	pad.PaddingBottom = UDim.new(0, b or 0)
-	pad.PaddingLeft   = UDim.new(0, l or 0)
-	pad.Parent = p
+local function pad(p, t, r, b, l)
+	local u = Instance.new("UIPadding")
+	u.PaddingTop    = UDim.new(0, t or 0)
+	u.PaddingRight  = UDim.new(0, r or 0)
+	u.PaddingBottom = UDim.new(0, b or 0)
+	u.PaddingLeft   = UDim.new(0, l or 0)
+	u.Parent = p
 end
 
-local function mkVList(p, sp)
+local function vlist(p, sp)
 	local l = Instance.new("UIListLayout")
 	l.FillDirection = Enum.FillDirection.Vertical
-	l.Padding = UDim.new(0, sp or 0)
-	l.SortOrder = Enum.SortOrder.LayoutOrder
-	l.Parent = p
+	l.Padding       = UDim.new(0, sp or 0)
+	l.SortOrder     = Enum.SortOrder.LayoutOrder
+	l.Parent        = p
 	return l
 end
 
-local function mkHList(p, sp)
+local function hlist(p, sp)
 	local l = Instance.new("UIListLayout")
 	l.FillDirection = Enum.FillDirection.Horizontal
-	l.Padding = UDim.new(0, sp or 0)
-	l.SortOrder = Enum.SortOrder.LayoutOrder
-	l.Parent = p
+	l.Padding       = UDim.new(0, sp or 0)
+	l.SortOrder     = Enum.SortOrder.LayoutOrder
+	l.Parent        = p
 	return l
 end
 
-local function mkFrame(p, sz, pos, col, name)
-	local f = Instance.new("Frame")
-	f.Size = sz or UDim2.new(1,0,1,0)
-	f.Position = pos or UDim2.new(0,0,0,0)
-	f.BackgroundColor3 = col or C.BG
-	f.BorderSizePixel = 0
-	f.Name = name or "Frame"
-	f.Parent = p
-	return f
-end
-
-local function mkLabel(p, text, sz, pos, col, fs, bold, name)
-	local l = Instance.new("TextLabel")
-	l.Size = sz or UDim2.new(1,0,0,20)
-	l.Position = pos or UDim2.new(0,0,0,0)
-	l.BackgroundTransparency = 1
-	l.Text = text or ""
-	l.TextColor3 = col or C.TEXT
-	l.TextSize = fs or 13
-	l.Font = bold and Enum.Font.GothamBold or Enum.Font.Gotham
-	l.TextXAlignment = Enum.TextXAlignment.Left
-	l.Name = name or "Label"
-	l.Parent = p
-	return l
-end
-
-local function mkBtn(p, text, sz, pos, bg, tc, name)
-	local b = Instance.new("TextButton")
-	b.Size = sz or UDim2.new(1,0,0,30)
-	b.Position = pos or UDim2.new(0,0,0,0)
-	b.BackgroundColor3 = bg or C.SURFACE
-	b.BorderSizePixel = 0
-	b.Text = text or ""
-	b.TextColor3 = tc or C.TEXT
-	b.TextSize = 13
-	b.Font = Enum.Font.Gotham
-	b.TextXAlignment = Enum.TextXAlignment.Left
-	b.AutoButtonColor = false
-	b.Name = name or "Btn"
-	b.Parent = p
-	return b
-end
-
-local function mkIcon(p, key, sz)
-	local img = Instance.new("ImageLabel")
-	img.Size = UDim2.new(0, sz or 16, 0, sz or 16)
-	img.BackgroundTransparency = 1
-	img.Image = RAW_ICONS[key] or ""
-	img.ImageColor3 = C.MUTED
-	img.ScaleType = Enum.ScaleType.Fit
-	img.Name = "Icon"
-	img.Parent = p
-	return img
-end
-
-local function mkScroll(p)
+local function newScroll(parent)
 	local s = Instance.new("ScrollingFrame")
-	s.Size = UDim2.new(1,0,1,0)
+	s.Size                 = UDim2.new(1,0,1,0)
+	s.Position             = UDim2.new(0,0,0,0)
 	s.BackgroundTransparency = 1
-	s.BorderSizePixel = 0
-	s.ScrollBarThickness = 3
-	s.ScrollBarImageColor3 = C.BORDER
-	s.ScrollBarImageTransparency = 0
-	s.CanvasSize = UDim2.new(0,0,0,0)
-	s.AutomaticCanvasSize = Enum.AutomaticSize.Y
-	s.Visible = false
-	s.Parent = p
-	mkVList(s, 6)
-	mkPad(s, 14, 12, 14, 12)
+	s.BorderSizePixel      = 0
+	s.ScrollBarThickness   = 3
+	s.ScrollBarImageColor3 = Color3.fromHex("303040")
+	s.CanvasSize           = UDim2.new(0,0,0,0)
+	s.AutomaticCanvasSize  = Enum.AutomaticSize.Y
+	s.Visible              = false
+	s.Name                 = "Scroll"
+	s.Parent               = parent
+	vlist(s, 6)
+	pad(s, 14, 12, 14, 12)
 	return s
 end
 
-local function mkRow(p, labelText)
-	local row = mkFrame(p, UDim2.new(1,0,0,36), nil, C.SURFACE, "Row")
-	mkCorner(row, 7)
-	mkStroke(row, Color3.fromHex("212128"), 1)
-	mkPad(row, 0, 10, 0, 10)
-	local lbl = mkLabel(row, labelText, UDim2.new(0.6,0,1,0), nil, C.TEXT, 13)
+local function newRow(parent, labelText)
+	local row = newFrame(parent, UDim2.new(1,0,0,36), nil, C.SURFACE, "Row")
+	corn(row, 7)
+	strk(row, C.BORDER, 1)
+	pad(row, 0, 10, 0, 10)
+	local lbl = newLabel(row, labelText, UDim2.new(0.6,0,1,0), nil, C.TEXT, 13)
 	lbl.TextYAlignment = Enum.TextYAlignment.Center
 	return row
 end
 
-local Hub = {}
-Hub.__index = Hub
+local function newToggle(parent, row, default, cb)
+	local state = default == true
+	local track = newFrame(row, UDim2.new(0,36,0,20), UDim2.new(1,-36,0.5,-10), state and C.ACCENT_DIM or C.TOFF, "Track")
+	corn(track, 10)
+	local thumb = newFrame(track, UDim2.new(0,14,0,14), UDim2.new(0, state and 19 or 3, 0.5,-7), state and C.ACCENT or C.TTHUMB, "Thumb")
+	corn(thumb, 7)
+	local hit = newBtn(row, "", UDim2.new(0,36,0,20), UDim2.new(1,-36,0.5,-10), C.SURFACE, C.WHITE, "Hit")
+	hit.BackgroundTransparency = 1
+	hit.ZIndex = track.ZIndex + 2
+	hit.MouseButton1Click:Connect(function()
+		state = not state
+		tw(track, TW.FAST, {BackgroundColor3 = state and C.ACCENT_DIM or C.TOFF})
+		tw(thumb, TW.FAST, {
+			Position        = UDim2.new(0, state and 19 or 3, 0.5, -7),
+			BackgroundColor3 = state and C.ACCENT or C.TTHUMB,
+		})
+		if cb then cb(state) end
+	end)
+end
 
-function Hub.new(title, toggleKey)
-	local self = setmetatable({}, Hub)
-	self._pages     = {}
-	self._active    = nil
-	self._visible   = true
-	self._full      = false
-	self._key       = toggleKey or Enum.KeyCode.K
-	self._title     = title or "Hub"
-	self._normSize  = UDim2.new(0, 660, 0, 480)
-	self._normPos   = UDim2.new(0.5, -330, 0.5, -240)
+local function newSlider(scroll, label, minV, maxV, defV, suffix, cb)
+	local wrap = newFrame(scroll, UDim2.new(1,0,0,52), nil, C.SURFACE, "Slider")
+	corn(wrap, 7)
+	strk(wrap, C.BORDER, 1)
+	pad(wrap, 8, 10, 8, 10)
+	local hdr = newFrame(wrap, UDim2.new(1,0,0,18), nil, C.SURFACE, "H")
+	local lbl = newLabel(hdr, label, UDim2.new(0.7,0,1,0), nil, C.TEXT, 13)
+	lbl.TextYAlignment = Enum.TextYAlignment.Center
+	local vLbl = newLabel(hdr, tostring(defV)..(suffix or ""), UDim2.new(0.3,0,1,0), UDim2.new(0.7,0,0,0), C.ACCENT, 13, true, "Val")
+	vLbl.TextXAlignment = Enum.TextXAlignment.Right
+	local trk = newFrame(wrap, UDim2.new(1,0,0,4), UDim2.new(0,0,1,-4), Color3.fromHex("222232"), "T")
+	corn(trk, 2)
+	local fill = newFrame(trk, UDim2.new((defV-minV)/(maxV-minV),0,1,0), nil, C.ACCENT, "F")
+	corn(fill, 2)
+	local knob = newFrame(trk, UDim2.new(0,14,0,14), UDim2.new((defV-minV)/(maxV-minV),-7,0.5,-7), C.ACCENT, "K")
+	corn(knob, 7)
+	local dragging = false
+	local function update(x)
+		local ratio = math.clamp((x - trk.AbsolutePosition.X) / trk.AbsoluteSize.X, 0, 1)
+		local val   = math.round(minV + ratio * (maxV - minV))
+		fill.Size         = UDim2.new(ratio, 0, 1, 0)
+		knob.Position     = UDim2.new(ratio, -7, 0.5, -7)
+		vLbl.Text         = tostring(val) .. (suffix or "")
+		if cb then cb(val) end
+	end
+	local db = newBtn(trk, "", UDim2.new(1,0,1,14), UDim2.new(0,0,0,-7), C.SURFACE, C.WHITE, "D")
+	db.BackgroundTransparency = 1
+	db.ZIndex = knob.ZIndex + 2
+	db.MouseButton1Down:Connect(function()
+		dragging = true
+		update(UserInputService:GetMouseLocation().X)
+	end)
+	UserInputService.InputEnded:Connect(function(inp)
+		if inp.UserInputType == Enum.UserInputType.MouseButton1 then dragging = false end
+	end)
+	UserInputService.InputChanged:Connect(function(inp)
+		if dragging and inp.UserInputType == Enum.UserInputType.MouseMovement then
+			update(inp.Position.X)
+		end
+	end)
+end
 
-	local gui = Instance.new("ScreenGui")
-	gui.Name = "HubGui"
-	gui.ResetOnSpawn = false
-	gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-	gui.Parent = PlayerGui
-	self._gui = gui
+local function newDropdown(scroll, label, opts, def, cb)
+	local row  = newRow(scroll, label)
+	local sel  = def or opts[1]
+	local dBtn = newBtn(row, sel.."  ▾", UDim2.new(0,120,0,24), UDim2.new(1,-120,0.5,-12), C.DROP_BG, C.TEXT, "D")
+	dBtn.TextXAlignment = Enum.TextXAlignment.Center
+	dBtn.TextSize = 12
+	corn(dBtn, 4)
+	strk(dBtn, C.BORDER, 1)
+	local open, dl = false, nil
+	dBtn.MouseButton1Click:Connect(function()
+		open = not open
+		if open then
+			dl = newFrame(row, UDim2.new(0,120,0,#opts*26), UDim2.new(1,-120,1,2), C.DROP_BG, "DL")
+			dl.ZIndex = 30
+			corn(dl, 5)
+			strk(dl, C.BORDER, 1)
+			vlist(dl, 0)
+			for _, o in ipairs(opts) do
+				local it = newBtn(dl, o, UDim2.new(1,0,0,26), nil, C.DROP_BG, C.TEXT, "I")
+				it.TextXAlignment = Enum.TextXAlignment.Center
+				it.TextSize = 12
+				it.ZIndex   = 31
+				it.MouseButton1Click:Connect(function()
+					sel = o
+					dBtn.Text = o .. "  ▾"
+					if dl then dl:Destroy() dl = nil end
+					open = false
+					if cb then cb(o) end
+				end)
+				it.MouseEnter:Connect(function() tw(it, TW.SNAP, {BackgroundColor3 = C.HOVER}) end)
+				it.MouseLeave:Connect(function() tw(it, TW.SNAP, {BackgroundColor3 = C.DROP_BG}) end)
+			end
+		else
+			if dl then dl:Destroy() dl = nil end
+		end
+	end)
+end
 
-	local canvas = Instance.new("CanvasGroup")
-	canvas.Name = "Canvas"
-	canvas.Size = self._normSize
-	canvas.Position = self._normPos
-	canvas.BackgroundTransparency = 1
-	canvas.BorderSizePixel = 0
-	canvas.GroupTransparency = 1
-	canvas.Parent = gui
-	self._canvas = canvas
+local function newMultiDropdown(scroll, label, opts, cb)
+	local row      = newRow(scroll, label)
+	local selected = {}
+	local function countText()
+		local n = 0
+		for _ in pairs(selected) do n += 1 end
+		return (n == 0 and "None" or n .. " Selected") .. "  ▾"
+	end
+	local dBtn = newBtn(row, countText(), UDim2.new(0,130,0,24), UDim2.new(1,-130,0.5,-12), C.DROP_BG, C.TEXT, "D")
+	dBtn.TextXAlignment = Enum.TextXAlignment.Center
+	dBtn.TextSize = 12
+	corn(dBtn, 4)
+	strk(dBtn, C.BORDER, 1)
+	local open, dl = false, nil
+	dBtn.MouseButton1Click:Connect(function()
+		open = not open
+		if open then
+			local panelH = math.min(#opts, 5) * 28 + 6
+			dl = newFrame(row, UDim2.new(0,130,0,panelH), UDim2.new(1,-130,1,2), C.DROP_BG, "MDL")
+			dl.ZIndex = 30
+			corn(dl, 5)
+			strk(dl, C.BORDER, 1)
+			vlist(dl, 2)
+			pad(dl, 3, 3, 3, 3)
+			for _, o in ipairs(opts) do
+				local ir = newFrame(dl, UDim2.new(1,0,0,26), nil, C.DROP_BG, "IR")
+				ir.ZIndex = 31
+				corn(ir, 4)
+				local chk = newFrame(ir, UDim2.new(0,14,0,14), UDim2.new(0,6,0.5,-7), selected[o] and C.ACCENT or C.TOFF, "Chk")
+				corn(chk, 3)
+				chk.ZIndex = 32
+				local inner = newFrame(chk, UDim2.new(0,6,0,6), UDim2.new(0.5,0,0.5,0), C.WHITE, "In")
+				corn(inner, 2)
+				inner.AnchorPoint = Vector2.new(0.5, 0.5)
+				inner.ZIndex      = 33
+				inner.Visible     = selected[o] == true
+				local oLbl = newLabel(ir, o, UDim2.new(1,-28,1,0), UDim2.new(0,26,0,0), C.TEXT, 12)
+				oLbl.TextYAlignment = Enum.TextYAlignment.Center
+				oLbl.ZIndex         = 32
+				local ib = newBtn(ir, "", UDim2.new(1,0,1,0), nil, C.DROP_BG, C.WHITE, "IB")
+				ib.BackgroundTransparency = 1
+				ib.ZIndex = 33
+				ib.MouseEnter:Connect(function() tw(ir, TW.SNAP, {BackgroundColor3 = C.HOVER}) end)
+				ib.MouseLeave:Connect(function() tw(ir, TW.SNAP, {BackgroundColor3 = C.DROP_BG}) end)
+				ib.MouseButton1Click:Connect(function()
+					if selected[o] then
+						selected[o] = nil
+						tw(chk, TW.SNAP, {BackgroundColor3 = C.TOFF})
+						inner.Visible = false
+					else
+						selected[o] = true
+						tw(chk, TW.SNAP, {BackgroundColor3 = C.ACCENT})
+						inner.Visible = true
+					end
+					dBtn.Text = countText()
+					if cb then cb(selected) end
+				end)
+			end
+		else
+			if dl then dl:Destroy() dl = nil end
+		end
+	end)
+end
 
-	local win = mkFrame(canvas, UDim2.new(1,0,1,0), nil, C.BG, "Window")
-	win.ClipsDescendants = true
-	mkCorner(win, 12)
-	mkStroke(win, C.BORDER, 1)
-	self._win = win
+local function newColorPicker(scroll, label, defaultHex, cb)
+	local hex  = defaultHex or "2563eb"
+	local r    = tonumber(hex:sub(1,2), 16) / 255
+	local g    = tonumber(hex:sub(3,4), 16) / 255
+	local b    = tonumber(hex:sub(5,6), 16) / 255
+	local row  = newRow(scroll, label)
+	local prev = newFrame(row, UDim2.new(0,20,0,20), UDim2.new(1,-24,0.5,-10), Color3.fromRGB(r*255,g*255,b*255), "Prev")
+	corn(prev, 5)
+	strk(prev, C.BORDER, 1)
+	local pBtn = newBtn(row, "", UDim2.new(0,20,0,20), UDim2.new(1,-24,0.5,-10), C.SURFACE, C.WHITE, "PBtn")
+	pBtn.BackgroundTransparency = 1
+	pBtn.ZIndex = prev.ZIndex + 1
+	local open, panel = false, nil
 
-	local titlebar = mkFrame(win, UDim2.new(1,0,0,38), nil, C.SIDEBAR, "Titlebar")
-	self._titlebar = titlebar
-
-	local titleLbl = mkLabel(titlebar, "", UDim2.new(1,-90,1,0), UDim2.new(0,12,0,0), C.MUTED, 12, false, "Title")
-	titleLbl.TextYAlignment = Enum.TextYAlignment.Center
-	self._titleLbl = titleLbl
-
-	local function trafficLight(col, xOff)
-		local dot = mkFrame(titlebar, UDim2.new(0,12,0,12), UDim2.new(1, xOff, 0.5, -6), col, "Dot")
-		mkCorner(dot, 6)
-		local hitbox = mkBtn(dot, "", UDim2.new(1,0,1,0), nil, col, C.WHITE, "Hit")
-		hitbox.BackgroundTransparency = 1
-		hitbox.ZIndex = dot.ZIndex + 1
-		hitbox.MouseEnter:Connect(function() tw(dot, TW.SNAP, {BackgroundTransparency = 0.4}) end)
-		hitbox.MouseLeave:Connect(function() tw(dot, TW.SNAP, {BackgroundTransparency = 0}) end)
-		return dot, hitbox
+	local function refresh()
+		local col = Color3.fromRGB(math.round(r*255), math.round(g*255), math.round(b*255))
+		prev.BackgroundColor3 = col
+		if cb then cb(col) end
 	end
 
-	local _,  redHit    = trafficLight(C.RED,    -60)
-	local _,  yellowHit = trafficLight(C.YELLOW, -42)
-	local _,  greenHit  = trafficLight(C.GREEN,  -24)
+	local function rgbSlider(parent, ch, val, yPos)
+		local bg = newFrame(parent, UDim2.new(1,-16,0,34), UDim2.new(8,0,0,yPos), Color3.fromHex("131318"), "RS")
+		corn(bg, 5)
+		bg.ZIndex = 32
+		local lbL = newLabel(bg, ch, UDim2.new(0,14,0,14), UDim2.new(0,0,0,0), C.MUTED, 10, true, "L")
+		lbL.TextXAlignment = Enum.TextXAlignment.Center
+		lbL.ZIndex = 33
+		local vLbl = newLabel(bg, tostring(math.round(val*255)), UDim2.new(0,30,0,14), UDim2.new(1,-30,0,0), C.ACCENT, 10, true, "V")
+		vLbl.TextXAlignment = Enum.TextXAlignment.Right
+		vLbl.ZIndex = 33
+		local trk = newFrame(bg, UDim2.new(1,-16,0,4), UDim2.new(8,0,0,22), Color3.fromHex("252535"), "T")
+		corn(trk, 2)
+		trk.ZIndex = 33
+		local fill = newFrame(trk, UDim2.new(val,0,1,0), nil, C.ACCENT, "F")
+		corn(fill, 2)
+		fill.ZIndex = 34
+		local knob = newFrame(trk, UDim2.new(0,10,0,10), UDim2.new(val,-5,0.5,-5), C.WHITE, "K")
+		corn(knob, 5)
+		knob.ZIndex = 35
+		local drag2 = false
+		local function upd(x)
+			local rv = math.clamp((x - trk.AbsolutePosition.X) / trk.AbsoluteSize.X, 0, 1)
+			fill.Size     = UDim2.new(rv, 0, 1, 0)
+			knob.Position = UDim2.new(rv, -5, 0.5, -5)
+			vLbl.Text     = tostring(math.round(rv * 255))
+			if ch == "R" then r = rv
+			elseif ch == "G" then g = rv
+			else b = rv end
+			refresh()
+		end
+		local db = newBtn(trk, "", UDim2.new(1,0,1,12), UDim2.new(0,0,0,-6), C.SURFACE, C.WHITE, "D")
+		db.BackgroundTransparency = 1
+		db.ZIndex = 36
+		db.MouseButton1Down:Connect(function() drag2 = true upd(UserInputService:GetMouseLocation().X) end)
+		UserInputService.InputEnded:Connect(function(inp)
+			if inp.UserInputType == Enum.UserInputType.MouseButton1 then drag2 = false end
+		end)
+		UserInputService.InputChanged:Connect(function(inp)
+			if drag2 and inp.UserInputType == Enum.UserInputType.MouseMovement then upd(inp.Position.X) end
+		end)
+	end
 
-	redHit.MouseButton1Click:Connect(function() self:Close() end)
-	yellowHit.MouseButton1Click:Connect(function() self:Fullscreen() end)
-	greenHit.MouseButton1Click:Connect(function() self:Toggle() end)
+	pBtn.MouseButton1Click:Connect(function()
+		open = not open
+		if open then
+			panel = newFrame(row, UDim2.new(0,210,0,126), UDim2.new(1,-214,1,2), Color3.fromHex("131318"), "CP")
+			panel.ZIndex = 30
+			corn(panel, 8)
+			strk(panel, C.BORDER, 1)
+			local bigPrev = newFrame(panel, UDim2.new(0,24,0,24), UDim2.new(1,-30,0,6), prev.BackgroundColor3, "BP")
+			corn(bigPrev, 6)
+			bigPrev.ZIndex = 31
+			local origCb = cb
+			cb = function(col)
+				bigPrev.BackgroundColor3 = col
+				if origCb then origCb(col) end
+			end
+			rgbSlider(panel, "R", r, 6)
+			rgbSlider(panel, "G", g, 44)
+			rgbSlider(panel, "B", b, 82)
+		else
+			if panel then panel:Destroy() panel = nil end
+		end
+	end)
+end
 
-	local dragZone = mkBtn(titlebar, "", UDim2.new(1,-80,1,0), nil, C.SIDEBAR, C.WHITE, "Drag")
-	dragZone.BackgroundTransparency = 1
-	dragZone.ZIndex = titlebar.ZIndex + 1
+local notifGui = Instance.new("ScreenGui")
+notifGui.Name           = "HubNotifs"
+notifGui.ResetOnSpawn   = false
+notifGui.DisplayOrder   = 100
+notifGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+notifGui.Parent         = PG
+
+local notifHolder = newFrame(notifGui, UDim2.new(0,280,1,0), UDim2.new(1,-292,0,0), C.BG, "NH")
+notifHolder.BackgroundTransparency = 1
+local notifLayout = vlist(notifHolder, 8)
+notifLayout.VerticalAlignment   = Enum.VerticalAlignment.Bottom
+notifLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+pad(notifHolder, 0, 0, 12, 0)
+
+local function pushNotif(title, text, duration, accent)
+	local notif = Instance.new("CanvasGroup")
+	notif.Size             = UDim2.new(1,0,0,72)
+	notif.BackgroundColor3 = C.NOTIF_BG
+	notif.BorderSizePixel  = 0
+	notif.GroupTransparency = 1
+	notif.Name             = "Notif"
+	notif.Parent           = notifHolder
+	corn(notif, 8)
+	strk(notif, C.BORDER, 1)
+
+	local bar = newFrame(notif, UDim2.new(0,3,1,0), nil, accent or C.ACCENT, "Bar")
+	corn(bar, 0)
+
+	local tLbl = newLabel(notif, title, UDim2.new(1,-46,0,20), UDim2.new(0,14,0,10), C.WHITE, 13, true, "T")
+	tLbl.TextYAlignment = Enum.TextYAlignment.Center
+
+	local msgLbl = newLabel(notif, text, UDim2.new(1,-46,0,18), UDim2.new(0,14,0,32), C.MUTED, 12, false, "M")
+	msgLbl.TextYAlignment = Enum.TextYAlignment.Center
+
+	local prog = newFrame(notif, UDim2.new(1,0,0,2), UDim2.new(0,0,1,-2), C.BORDER, "Prog")
+	local fill = newFrame(prog, UDim2.new(1,0,1,0), nil, accent or C.ACCENT, "Fill")
+
+	local xBtn = newBtn(notif, "✕", UDim2.new(0,18,0,18), UDim2.new(1,-24,0,8), C.NOTIF_BG, C.MUTED, "X")
+	xBtn.TextSize       = 10
+	xBtn.TextXAlignment = Enum.TextXAlignment.Center
+
+	local dismissed = false
+	local function dismiss()
+		if dismissed then return end
+		dismissed = true
+		tw(notif, TW.SLIDE, {GroupTransparency = 1})
+		task.delay(0.32, function() notif:Destroy() end)
+	end
+
+	xBtn.MouseButton1Click:Connect(dismiss)
+	tw(notif, TW.SLIDE, {GroupTransparency = 0})
+	tw(fill, TweenInfo.new(duration or 3, Enum.EasingStyle.Linear), {Size = UDim2.new(0,0,1,0)})
+	task.delay(duration or 3, dismiss)
+end
+
+local Lib = {}
+
+function Lib:Window(title, subtitle, key)
+	local gui = Instance.new("ScreenGui")
+	gui.Name           = "HubGui"
+	gui.ResetOnSpawn   = false
+	gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+	gui.Parent         = PG
+
+	local loadCanvas = Instance.new("CanvasGroup")
+	loadCanvas.Size             = UDim2.new(0,460,0,82)
+	loadCanvas.Position         = UDim2.new(0.5,-230,0.5,-41)
+	loadCanvas.BackgroundColor3 = C.SURFACE
+	loadCanvas.BorderSizePixel  = 0
+	loadCanvas.GroupTransparency = 1
+	loadCanvas.Name             = "Load"
+	loadCanvas.Parent           = gui
+	corn(loadCanvas, 12)
+	strk(loadCanvas, C.BORDER, 1)
+
+	newLabel(loadCanvas, title or "Hub", UDim2.new(1,-80,0,36), UDim2.new(0,20,0,8), C.WHITE, 15, true, "LT")
+	newLabel(loadCanvas, subtitle or "", UDim2.new(1,-80,0,22), UDim2.new(0,20,0,48), C.MUTED, 12, false, "LS")
+
+	local dots = newLabel(loadCanvas, "...", UDim2.new(0,50,0,36), UDim2.new(1,-62,0,8), C.ACCENT, 15, true, "LD")
+	dots.TextXAlignment = Enum.TextXAlignment.Right
+
+	local dotThread = task.spawn(function()
+		local seq = {".", "..", "..."}
+		local i = 1
+		while loadCanvas.Parent do
+			dots.Text = seq[i]
+			i = (i % 3) + 1
+			task.wait(0.38)
+		end
+	end)
+
+	local NORM_SIZE = UDim2.new(0,700,0,500)
+	local NORM_POS  = UDim2.new(0.5,-350,0.5,-250)
+
+	local winCanvas = Instance.new("CanvasGroup")
+	winCanvas.Size             = NORM_SIZE
+	winCanvas.Position         = NORM_POS
+	winCanvas.BackgroundTransparency = 1
+	winCanvas.BorderSizePixel  = 0
+	winCanvas.GroupTransparency = 1
+	winCanvas.Visible          = false
+	winCanvas.Name             = "Canvas"
+	winCanvas.Parent           = gui
+
+	local win = newFrame(winCanvas, UDim2.new(1,0,1,0), nil, C.BG, "Win")
+	win.ClipsDescendants = true
+	corn(win, 14)
+	strk(win, C.BORDER, 1)
+
+	local titlebar = newFrame(win, UDim2.new(1,0,0,40), nil, Color3.fromHex("0d0d11"), "TB")
+
+	local titleLbl = newLabel(titlebar, "", UDim2.new(1,-90,1,0), UDim2.new(0,14,0,0), C.MUTED, 12, false, "TL")
+	titleLbl.TextYAlignment = Enum.TextYAlignment.Center
+
+	local visible     = true
+	local fullscreen  = false
+	local savedSize, savedPos
+
+	local function doClose()
+		tw(winCanvas, TW.CLOSE, {GroupTransparency = 1})
+		task.delay(0.25, function() gui:Destroy() end)
+	end
+
+	local function doFullscreen()
+		if not fullscreen then
+			savedSize = winCanvas.Size
+			savedPos  = winCanvas.Position
+			tw(winCanvas, TW.FULL, {Size = UDim2.new(1,0,1,0), Position = UDim2.new(0,0,0,0)})
+		else
+			tw(winCanvas, TW.FULL, {Size = savedSize, Position = savedPos})
+		end
+		fullscreen = not fullscreen
+	end
+
+	local function doToggle()
+		visible = not visible
+		if visible then
+			winCanvas.Visible = true
+			winCanvas.Size    = UDim2.new(0, NORM_SIZE.X.Offset*0.95, 0, NORM_SIZE.Y.Offset*0.95)
+			winCanvas.Position = NORM_POS
+			tw(winCanvas, TW.OPEN, {GroupTransparency = 0, Size = NORM_SIZE})
+		else
+			tw(winCanvas, TW.CLOSE, {GroupTransparency = 1})
+			task.delay(0.22, function() winCanvas.Visible = false end)
+		end
+	end
+
+	local function mkLight(col, xOff, fn)
+		local dot = newFrame(titlebar, UDim2.new(0,12,0,12), UDim2.new(1,xOff,0.5,-6), col, "TL")
+		corn(dot, 6)
+		local hit = newBtn(dot, "", UDim2.new(1,0,1,0), nil, col, C.WHITE, "Hit")
+		hit.BackgroundTransparency = 1
+		hit.ZIndex = dot.ZIndex + 1
+		hit.MouseEnter:Connect(function() tw(dot, TW.SNAP, {BackgroundTransparency = 0.4}) end)
+		hit.MouseLeave:Connect(function() tw(dot, TW.SNAP, {BackgroundTransparency = 0}) end)
+		hit.MouseButton1Click:Connect(fn)
+	end
+
+	mkLight(C.RED,    -62, doClose)
+	mkLight(C.YELLOW, -44, doFullscreen)
+	mkLight(C.GREEN,  -26, doToggle)
 
 	local dragging, dragOff = false, Vector2.new()
-	dragZone.MouseButton1Down:Connect(function()
-		if self._full then return end
+	local dragHit = newBtn(titlebar, "", UDim2.new(1,-80,1,0), nil, Color3.fromHex("0d0d11"), C.WHITE, "Drag")
+	dragHit.BackgroundTransparency = 1
+	dragHit.ZIndex = titlebar.ZIndex + 1
+	dragHit.MouseButton1Down:Connect(function()
+		if fullscreen then return end
 		dragging = true
-		local m = UserInputService:GetMouseLocation()
-		dragOff = m - Vector2.new(canvas.AbsolutePosition.X, canvas.AbsolutePosition.Y)
+		local m   = UserInputService:GetMouseLocation()
+		dragOff   = m - Vector2.new(winCanvas.AbsolutePosition.X, winCanvas.AbsolutePosition.Y)
 	end)
 	UserInputService.InputEnded:Connect(function(inp)
 		if inp.UserInputType == Enum.UserInputType.MouseButton1 then dragging = false end
@@ -277,404 +626,208 @@ function Hub.new(title, toggleKey)
 	UserInputService.InputChanged:Connect(function(inp)
 		if dragging and inp.UserInputType == Enum.UserInputType.MouseMovement then
 			local m = UserInputService:GetMouseLocation()
-			canvas.Position = UDim2.new(0, m.X - dragOff.X, 0, m.Y - dragOff.Y)
+			winCanvas.Position = UDim2.new(0, m.X - dragOff.X, 0, m.Y - dragOff.Y)
 		end
 	end)
 
-	local body = mkFrame(win, UDim2.new(1,0,1,-38), UDim2.new(0,0,0,38), C.BG, "Body")
-	body.ClipsDescendants = true
-	mkHList(body, 0)
-	self._body = body
-
-	local sidebar = mkFrame(body, UDim2.new(0,140,1,0), nil, C.SIDEBAR, "Sidebar")
-	sidebar.LayoutOrder = 1
-	mkVList(sidebar, 2)
-	mkPad(sidebar, 8, 0, 8, 0)
-	self._sidebar = sidebar
-
-	local sideBorder = mkFrame(sidebar, UDim2.new(0,1,1,0), UDim2.new(1,-1,0,0), C.BORDER, "Border")
-	sideBorder.ZIndex = sidebar.ZIndex + 10
-
-	local main = mkFrame(body, UDim2.new(1,-140,1,0), nil, C.BG, "Main")
-	main.LayoutOrder = 2
-	main.ClipsDescendants = true
-	self._main = main
-
 	local fps = 0
-	RunService.RenderStepped:Connect(function(dt)
-		fps = math.round(1 / dt)
-	end)
-
+	RunService.RenderStepped:Connect(function(dt) fps = math.round(1 / dt) end)
 	task.spawn(function()
 		while gui.Parent do
-			local t = os.date("%H:%M:%S")
-			titleLbl.Text = self._title .. "  |  " .. t .. "  |  " .. fps .. " FPS"
+			titleLbl.Text = (title or "Hub") .. "  |  " .. os.date("%H:%M:%S") .. "  |  " .. fps .. " FPS"
 			task.wait(0.2)
 		end
 	end)
 
+	local toggleKey = key or Enum.KeyCode.K
 	UserInputService.InputBegan:Connect(function(inp, gp)
 		if gp then return end
-		if inp.KeyCode == self._key then self:Toggle() end
+		if inp.KeyCode == toggleKey then doToggle() end
 	end)
 
-	canvas.Size = UDim2.new(0, self._normSize.X.Offset * 0.94, 0, self._normSize.Y.Offset * 0.94)
-	canvas.Position = UDim2.new(
-		self._normPos.X.Scale, self._normPos.X.Offset + self._normSize.X.Offset * 0.03,
-		self._normPos.Y.Scale, self._normPos.Y.Offset + self._normSize.Y.Offset * 0.03
-	)
+	local sidebar = newFrame(win, UDim2.new(0,144,1,-40), UDim2.new(0,0,0,40), C.SIDEBAR, "Sidebar")
+	sidebar.ClipsDescendants = true
+	vlist(sidebar, 2)
+	pad(sidebar, 8, 0, 8, 0)
 
-	task.defer(function()
-		tw(canvas, TW.OPEN, {
-			GroupTransparency = 0,
-			Size = self._normSize,
-			Position = self._normPos,
-		})
+	newFrame(win, UDim2.new(0,1,1,-40), UDim2.new(0,144,0,40), C.BORDER, "SBorder")
+
+	local main = newFrame(win, UDim2.new(1,-145,1,-40), UDim2.new(0,145,0,40), C.BG, "Main")
+
+	local pages   = {}
+	local activePg = nil
+
+	tw(loadCanvas, TW.LOAD, {GroupTransparency = 0})
+	task.delay(1.75, function()
+		tw(loadCanvas, TW.LOAD, {GroupTransparency = 1})
+		task.delay(0.28, function()
+			task.cancel(dotThread)
+			loadCanvas:Destroy()
+			winCanvas.Visible  = true
+			winCanvas.Size     = UDim2.new(0, NORM_SIZE.X.Offset*0.94, 0, NORM_SIZE.Y.Offset*0.94)
+			winCanvas.Position = UDim2.new(
+				NORM_POS.X.Scale, NORM_POS.X.Offset + NORM_SIZE.X.Offset * 0.03,
+				NORM_POS.Y.Scale, NORM_POS.Y.Offset + NORM_SIZE.Y.Offset * 0.03
+			)
+			tw(winCanvas, TW.OPEN, {GroupTransparency = 0, Size = NORM_SIZE, Position = NORM_POS})
+		end)
 	end)
 
-	return self
-end
+	local winAPI = {}
 
-function Hub:Toggle()
-	if self._visible then
-		tw(self._canvas, TW.CLOSE, {
-			GroupTransparency = 1,
-			Size = UDim2.new(0, self._normSize.X.Offset * 0.96, 0, self._normSize.Y.Offset * 0.96),
-			Position = UDim2.new(
-				self._normPos.X.Scale, self._normPos.X.Offset + self._normSize.X.Offset * 0.02,
-				self._normPos.Y.Scale, self._normPos.Y.Offset + self._normSize.Y.Offset * 0.02
-			),
-		})
-		task.delay(0.25, function() self._canvas.Visible = false end)
-	else
-		self._canvas.Visible = true
-		tw(self._canvas, TW.OPEN, {
-			GroupTransparency = 0,
-			Size = self._normSize,
-			Position = self._normPos,
-		})
-	end
-	self._visible = not self._visible
-end
+	function winAPI:Page(name, icon)
+		local idx = #pages + 1
 
-function Hub:Fullscreen()
-	if not self._full then
-		self._savedPos  = self._canvas.Position
-		self._savedSize = self._canvas.Size
-		tw(self._canvas, TW.FULL, {
-			Size     = UDim2.new(1, 0, 1, 0),
-			Position = UDim2.new(0, 0, 0, 0),
-		})
-		self._full = true
-	else
-		tw(self._canvas, TW.FULL, {
-			Size     = self._savedSize or self._normSize,
-			Position = self._savedPos  or self._normPos,
-		})
-		self._full = false
-	end
-end
+		local sBtn = newBtn(sidebar, "", UDim2.new(1,0,0,34), nil, C.SIDEBAR, C.MUTED, "S"..name)
+		sBtn.LayoutOrder = idx
 
-function Hub:Close()
-	tw(self._canvas, TW.CLOSE, {
-		GroupTransparency = 1,
-		Size = UDim2.new(0, self._normSize.X.Offset * 0.92, 0, self._normSize.Y.Offset * 0.92),
-		Position = UDim2.new(
-			self._normPos.X.Scale, self._normPos.X.Offset + self._normSize.X.Offset * 0.04,
-			self._normPos.Y.Scale, self._normPos.Y.Offset + self._normSize.Y.Offset * 0.04
-		),
-	})
-	task.delay(0.28, function()
-		self._gui:Destroy()
-	end)
-end
+		local acc = newFrame(sBtn, UDim2.new(0,2,1,0), nil, C.ACCENT, "Acc")
+		acc.BackgroundTransparency = 1
+		acc.ZIndex = sBtn.ZIndex + 2
 
-function Hub:Page(name, iconKey)
-	local idx = #self._pages + 1
+		local ic = newImg(sBtn, icon or "settings", 15)
+		ic.Position = UDim2.new(0,12,0.5,-7)
 
-	local sideBtn = mkBtn(self._sidebar, "", UDim2.new(1,0,0,34), nil, C.SIDEBAR, C.MUTED, "S_"..name)
-	sideBtn.LayoutOrder = idx + 1
+		local nLbl = newLabel(sBtn, name, UDim2.new(1,-34,1,0), UDim2.new(0,34,0,0), C.MUTED, 13)
+		nLbl.TextYAlignment = Enum.TextYAlignment.Center
 
-	local accent = mkFrame(sideBtn, UDim2.new(0,2,1,0), nil, C.ACCENT, "Acc")
-	accent.BackgroundTransparency = 1
-	accent.ZIndex = sideBtn.ZIndex + 2
+		local content = newFrame(main, UDim2.new(1,0,1,0), nil, C.BG, "C"..name)
+		content.Visible = false
 
-	local ic = mkIcon(sideBtn, iconKey or "settings", 15)
-	ic.Position = UDim2.new(0, 12, 0.5, -7)
+		local tabBar = newFrame(content, UDim2.new(1,0,0,36), nil, C.TABBAR, "TabBar")
+		tabBar.Visible = false
+		newFrame(tabBar, UDim2.new(1,0,0,1), UDim2.new(0,0,1,-1), C.BORDER, "Line")
+		hlist(tabBar, 4)
+		pad(tabBar, 8, 10, 0, 10)
 
-	local nameLbl = mkLabel(sideBtn, name, UDim2.new(1,-34,1,0), UDim2.new(0,34,0,0), C.MUTED, 13)
-	nameLbl.TextYAlignment = Enum.TextYAlignment.Center
+		local host = newFrame(content, UDim2.new(1,0,1,0), nil, C.BG, "Host")
 
-	local container = mkFrame(self._main, UDim2.new(1,0,1,0), nil, C.BG, "P_"..name)
-	container.Visible = false
-	container.ClipsDescendants = true
+		local tabList  = {}
+		local activeTab = nil
 
-	local tabBar = mkFrame(container, UDim2.new(1,0,0,38), nil, C.TABBAR, "TabBar")
-	tabBar.Visible = false
-	mkFrame(tabBar, UDim2.new(1,0,0,1), UDim2.new(0,0,1,-1), C.BORDER, "Line")
-	mkHList(tabBar, 4)
-	mkPad(tabBar, 8, 10, 0, 10)
-
-	local contentHost = mkFrame(container, UDim2.new(1,0,1,0), nil, C.BG, "Host")
-	contentHost.ClipsDescendants = true
-
-	local page = {
-		_hub         = self,
-		_name        = name,
-		_btn         = sideBtn,
-		_accent      = accent,
-		_icon        = ic,
-		_lbl         = nameLbl,
-		_container   = container,
-		_tabBar      = tabBar,
-		_host        = contentHost,
-		_tabs        = {},
-		_activeTab   = nil,
-		_defScroll   = nil,
-	}
-
-	local function activatePage(page)
-		if self._active then
-			local prev = self._active
-			tw(prev._btn,    TW.FAST, {BackgroundColor3 = C.SIDEBAR})
-			tw(prev._accent, TW.FAST, {BackgroundTransparency = 1})
-			tw(prev._lbl,    TW.FAST, {TextColor3 = C.MUTED})
-			tw(prev._icon,   TW.FAST, {ImageColor3 = C.MUTED})
-			prev._container.Visible = false
-		end
-		tw(sideBtn,  TW.FAST, {BackgroundColor3 = C.ACTIVE_BG})
-		tw(accent,   TW.FAST, {BackgroundTransparency = 0})
-		tw(nameLbl,  TW.FAST, {TextColor3 = C.WHITE})
-		tw(ic,       TW.FAST, {ImageColor3 = C.WHITE})
-		container.Visible = true
-		self._active = page
-	end
-
-	sideBtn.MouseButton1Click:Connect(function() activatePage(page) end)
-	sideBtn.MouseEnter:Connect(function()
-		if self._active ~= page then tw(sideBtn, TW.SNAP, {BackgroundColor3 = C.HOVER}) end
-	end)
-	sideBtn.MouseLeave:Connect(function()
-		if self._active ~= page then tw(sideBtn, TW.SNAP, {BackgroundColor3 = C.SIDEBAR}) end
-	end)
-
-	if idx == 1 then
-		task.defer(function() activatePage(page) end)
-	end
-
-	table.insert(self._pages, page)
-
-	local pageAPI = {}
-
-	function pageAPI:Tab(tabName)
-		tabBar.Visible = true
-		contentHost.Size     = UDim2.new(1,0,1,-38)
-		contentHost.Position = UDim2.new(0,0,0,38)
-
-		local tabBtn = mkBtn(tabBar, tabName, UDim2.new(0,86,1,0), nil, C.TABBAR, C.MUTED, "T_"..tabName)
-		tabBtn.TextXAlignment = Enum.TextXAlignment.Center
-		tabBtn.TextSize = 12
-		tabBtn.Font = Enum.Font.GothamMedium
-		tabBtn.LayoutOrder = #page._tabs + 1
-
-		local underline = mkFrame(tabBtn, UDim2.new(0,0,0,2), UDim2.new(0.5,0,1,-2), C.ACCENT, "UL")
-		underline.AnchorPoint = Vector2.new(0.5,0)
-
-		local scroll = mkScroll(contentHost)
-
-		local tabData = {
-			_btn      = tabBtn,
-			_ul       = underline,
-			_scroll   = scroll,
-		}
-
-		local function activateTab(t)
-			if page._activeTab then
-				local pt = page._activeTab
-				tw(pt._btn, TW.FAST, {BackgroundColor3 = C.TABBAR, TextColor3 = C.MUTED})
-				tw(pt._ul,  TW.MED,  {Size = UDim2.new(0,0,0,2)})
-				pt._scroll.Visible = false
+		local function activatePage()
+			if activePg then
+				local p = activePg
+				tw(p.btn,  TW.FAST, {BackgroundColor3 = C.SIDEBAR})
+				tw(p.acc,  TW.FAST, {BackgroundTransparency = 1})
+				tw(p.lbl,  TW.FAST, {TextColor3 = C.MUTED})
+				tw(p.ic,   TW.FAST, {ImageColor3 = C.MUTED})
+				p.content.Visible = false
 			end
-			tw(tabBtn, TW.FAST, {BackgroundColor3 = C.BG, TextColor3 = C.WHITE})
-			tw(underline, TW.MED, {Size = UDim2.new(0.78,0,0,2)})
-			scroll.Visible = true
-			scroll.CanvasPosition = Vector2.new(0,0)
-			page._activeTab = t
+			tw(sBtn, TW.FAST, {BackgroundColor3 = C.ACTIVE})
+			tw(acc,  TW.FAST, {BackgroundTransparency = 0})
+			tw(nLbl, TW.FAST, {TextColor3 = C.WHITE})
+			tw(ic,   TW.FAST, {ImageColor3 = C.WHITE})
+			content.Visible = true
+			activePg = {btn = sBtn, acc = acc, lbl = nLbl, ic = ic, content = content}
 		end
 
-		tabBtn.MouseButton1Click:Connect(function() activateTab(tabData) end)
-		tabBtn.MouseEnter:Connect(function()
-			if page._activeTab ~= tabData then
-				tw(tabBtn, TW.SNAP, {BackgroundColor3 = C.HOVER, TextColor3 = C.TEXT})
+		sBtn.MouseButton1Click:Connect(activatePage)
+		sBtn.MouseEnter:Connect(function()
+			if not activePg or activePg.btn ~= sBtn then
+				tw(sBtn, TW.SNAP, {BackgroundColor3 = C.HOVER})
 			end
 		end)
-		tabBtn.MouseLeave:Connect(function()
-			if page._activeTab ~= tabData then
-				tw(tabBtn, TW.SNAP, {BackgroundColor3 = C.TABBAR, TextColor3 = C.MUTED})
+		sBtn.MouseLeave:Connect(function()
+			if not activePg or activePg.btn ~= sBtn then
+				tw(sBtn, TW.SNAP, {BackgroundColor3 = C.SIDEBAR})
 			end
 		end)
 
-		if #page._tabs == 0 then
-			task.defer(function() activateTab(tabData) end)
-		end
+		if idx == 1 then task.defer(activatePage) end
+		table.insert(pages, {btn=sBtn, acc=acc, lbl=nLbl, ic=ic, content=content})
 
-		table.insert(page._tabs, tabData)
+		local pageAPI = {}
 
-		local tabAPI = {}
+		function pageAPI:Tab(tabName)
+			tabBar.Visible = true
+			host.Size      = UDim2.new(1,0,1,-36)
+			host.Position  = UDim2.new(0,0,0,36)
 
-		function tabAPI:Section(title)
-			local s = mkLabel(scroll, string.upper(title), UDim2.new(1,0,0,18), nil, C.MUTED, 10, true, "Sec")
+			local tBtn = newBtn(tabBar, tabName, UDim2.new(0,88,1,0), nil, C.TABBAR, C.MUTED, "T"..tabName)
+			tBtn.TextXAlignment = Enum.TextXAlignment.Center
+			tBtn.TextSize       = 12
+			tBtn.Font           = Enum.Font.GothamMedium
+			tBtn.LayoutOrder    = #tabList + 1
 
-			return s
-		end
+			local ul = newFrame(tBtn, UDim2.new(0,0,0,2), UDim2.new(0.5,0,1,-2), C.ACCENT, "UL")
+			ul.AnchorPoint = Vector2.new(0.5, 0)
 
-		function tabAPI:Toggle(lText, default, cb)
-			local state = default or false
-			local row = mkRow(scroll, lText)
+			local sc = newScroll(host)
 
-			local track = mkFrame(row, UDim2.new(0,36,0,20), UDim2.new(1,-36,0.5,-10), state and C.ACCENT_DIM or C.TOFF, "Tr")
-			mkCorner(track, 10)
-			local thumb = mkFrame(track, UDim2.new(0,14,0,14), UDim2.new(0, state and 19 or 3, 0.5,-7), state and C.ACCENT or C.TTHUMB, "Th")
-			mkCorner(thumb, 7)
+			local tabData = {btn = tBtn, ul = ul, scroll = sc}
 
-			local hitbox = mkBtn(row, "", UDim2.new(0,36,0,20), UDim2.new(1,-36,0.5,-10), C.SURFACE, C.WHITE, "Hit")
-			hitbox.BackgroundTransparency = 1
-			hitbox.ZIndex = track.ZIndex + 2
-
-			hitbox.MouseButton1Click:Connect(function()
-				state = not state
-				tw(track, TW.FAST, {BackgroundColor3 = state and C.ACCENT_DIM or C.TOFF})
-				tw(thumb, TW.FAST, {
-					Position = UDim2.new(0, state and 19 or 3, 0.5, -7),
-					BackgroundColor3 = state and C.ACCENT or C.TTHUMB,
-				})
-				if cb then cb(state) end
-			end)
-
-			return row
-		end
-
-		function tabAPI:Slider(lText, minV, maxV, defV, suffix, cb)
-			local wrap = mkFrame(scroll, UDim2.new(1,0,0,52), nil, C.SURFACE, "Sl")
-			mkCorner(wrap, 7)
-			mkStroke(wrap, Color3.fromHex("212128"), 1)
-			mkPad(wrap, 8, 10, 8, 10)
-
-			local hdr = mkFrame(wrap, UDim2.new(1,0,0,18), nil, C.SURFACE, "H")
-			local lbl2 = mkLabel(hdr, lText, UDim2.new(0.7,0,1,0), nil, C.TEXT, 13)
-			lbl2.TextYAlignment = Enum.TextYAlignment.Center
-			local vLbl = mkLabel(hdr, tostring(defV)..(suffix or ""), UDim2.new(0.3,0,1,0), UDim2.new(0.7,0,0,0), C.ACCENT, 13, true, "V")
-			vLbl.TextXAlignment = Enum.TextXAlignment.Right
-
-			local trk = mkFrame(wrap, UDim2.new(1,0,0,4), UDim2.new(0,0,1,-4), Color3.fromHex("252530"), "T")
-			mkCorner(trk, 2)
-			local fill = mkFrame(trk, UDim2.new((defV-minV)/(maxV-minV),0,1,0), nil, C.ACCENT, "F")
-			mkCorner(fill, 2)
-			local knob = mkFrame(trk, UDim2.new(0,14,0,14), UDim2.new((defV-minV)/(maxV-minV),-7,0.5,-7), C.ACCENT, "K")
-			mkCorner(knob, 7)
-
-			local dragging = false
-			local function update(x)
-				local ratio = math.clamp((x - trk.AbsolutePosition.X)/trk.AbsoluteSize.X, 0, 1)
-				local val = math.round(minV + ratio*(maxV-minV))
-				fill.Size = UDim2.new(ratio,0,1,0)
-				knob.Position = UDim2.new(ratio,-7,0.5,-7)
-				vLbl.Text = tostring(val)..(suffix or "")
-				if cb then cb(val) end
+			local function activateTab()
+				if activeTab then
+					local pt = activeTab
+					tw(pt.btn, TW.FAST, {BackgroundColor3 = C.TABBAR, TextColor3 = C.MUTED})
+					tw(pt.ul,  TW.MED,  {Size = UDim2.new(0,0,0,2)})
+					pt.scroll.Visible = false
+				end
+				tw(tBtn, TW.FAST, {BackgroundColor3 = C.BG, TextColor3 = C.WHITE})
+				tw(ul,   TW.MED,  {Size = UDim2.new(0.8,0,0,2)})
+				sc.Visible = true
+				sc.CanvasPosition = Vector2.new(0,0)
+				activeTab = tabData
 			end
 
-			local dBtn = mkBtn(trk, "", UDim2.new(1,0,1,14), UDim2.new(0,0,0,-7), C.SURFACE, C.WHITE, "D")
-			dBtn.BackgroundTransparency = 1
-			dBtn.ZIndex = knob.ZIndex + 2
-			dBtn.MouseButton1Down:Connect(function()
-				dragging = true
-				update(UserInputService:GetMouseLocation().X)
+			tBtn.MouseButton1Click:Connect(activateTab)
+			tBtn.MouseEnter:Connect(function()
+				if activeTab ~= tabData then
+					tw(tBtn, TW.SNAP, {BackgroundColor3 = C.HOVER, TextColor3 = C.TEXT})
+				end
 			end)
-			UserInputService.InputEnded:Connect(function(inp)
-				if inp.UserInputType == Enum.UserInputType.MouseButton1 then dragging = false end
-			end)
-			UserInputService.InputChanged:Connect(function(inp)
-				if dragging and inp.UserInputType == Enum.UserInputType.MouseMovement then
-					update(inp.Position.X)
+			tBtn.MouseLeave:Connect(function()
+				if activeTab ~= tabData then
+					tw(tBtn, TW.SNAP, {BackgroundColor3 = C.TABBAR, TextColor3 = C.MUTED})
 				end
 			end)
 
-			return wrap
-		end
+			if #tabList == 0 then task.defer(activateTab) end
+			table.insert(tabList, tabData)
 
-		function tabAPI:Dropdown(lText, opts, def, cb)
-			local row = mkRow(scroll, lText)
-			local sel = def or opts[1]
+			local tabAPI = {}
 
-			local dbtn = mkBtn(row, sel.."  ▾", UDim2.new(0,110,0,24), UDim2.new(1,-110,0.5,-12), Color3.fromHex("1b1b24"), C.TEXT, "D")
-			dbtn.TextXAlignment = Enum.TextXAlignment.Center
-			dbtn.TextSize = 12
-			mkCorner(dbtn, 4)
-			mkStroke(dbtn, C.BORDER, 1)
-
-			local open, dList = false, nil
-
-			dbtn.MouseButton1Click:Connect(function()
-				open = not open
-				if open then
-					dList = mkFrame(row, UDim2.new(0,110,0,#opts*26), UDim2.new(1,-110,1,2), Color3.fromHex("1b1b24"), "DL")
-					dList.ZIndex = 30
-					mkCorner(dList, 5)
-					mkStroke(dList, C.BORDER, 1)
-					mkVList(dList, 0)
-
-					for _, opt in ipairs(opts) do
-						local item = mkBtn(dList, opt, UDim2.new(1,0,0,26), nil, Color3.fromHex("1b1b24"), C.TEXT, "I")
-						item.TextSize = 12
-						item.TextXAlignment = Enum.TextXAlignment.Center
-						item.ZIndex = 31
-						item.MouseButton1Click:Connect(function()
-							sel = opt
-							dbtn.Text = opt.."  ▾"
-							dList:Destroy() dList = nil open = false
-							if cb then cb(opt) end
-						end)
-						item.MouseEnter:Connect(function() tw(item, TW.SNAP, {BackgroundColor3 = C.HOVER}) end)
-						item.MouseLeave:Connect(function() tw(item, TW.SNAP, {BackgroundColor3 = Color3.fromHex("1b1b24")}) end)
-					end
-				else
-					if dList then dList:Destroy() dList = nil end
-				end
-			end)
-
-			return row
-		end
-
-		function tabAPI:ColorPicker(lText, hexList, cb)
-			local row = mkRow(scroll, lText)
-			local n = #hexList
-			local swWrap = mkFrame(row, UDim2.new(0,n*22,0,20), UDim2.new(1,-(n*22),0.5,-10), C.BG, "SW")
-			swWrap.BackgroundTransparency = 1
-			mkHList(swWrap, 4)
-
-			local selRing = nil
-			for i, hex in ipairs(hexList) do
-				local sw = mkFrame(swWrap, UDim2.new(0,16,0,16), nil, Color3.fromHex(hex), "S"..i)
-				mkCorner(sw, 8)
-				local ring = mkStroke(sw, C.WHITE, 0)
-				local sbtn = mkBtn(sw, "", UDim2.new(1,0,1,0), nil, Color3.fromHex(hex), C.WHITE, "B")
-				sbtn.BackgroundTransparency = 1
-				sbtn.MouseButton1Click:Connect(function()
-					if selRing then tw(selRing, TW.FAST, {Thickness=0}) end
-					selRing = ring
-					tw(ring, TW.FAST, {Thickness=2})
-					if cb then cb(hex) end
-				end)
-				if i==1 then ring.Thickness=2 selRing=ring end
+			function tabAPI:Section(sectionTitle)
+				newLabel(sc, "• " .. string.upper(sectionTitle), UDim2.new(1,0,0,16), nil, C.MUTED, 10, true, "Sec")
 			end
 
-			return row
+			function tabAPI:Toggle(lbl, default, cb)
+				local row = newRow(sc, lbl)
+				newToggle(sc, row, default, cb)
+			end
+
+			function tabAPI:Slider(lbl, mn, mx, def, sfx, cb)
+				newSlider(sc, lbl, mn, mx, def, sfx, cb)
+			end
+
+			function tabAPI:Dropdown(lbl, opts, def, cb)
+				newDropdown(sc, lbl, opts, def, cb)
+			end
+
+			function tabAPI:MultiDropdown(lbl, opts, cb)
+				newMultiDropdown(sc, lbl, opts, cb)
+			end
+
+			function tabAPI:ColorPicker(lbl, defHex, cb)
+				newColorPicker(sc, lbl, defHex, cb)
+			end
+
+			return tabAPI
 		end
 
-		return tabAPI
+		return pageAPI
 	end
 
-	return pageAPI
+	function winAPI:Notify(title, text, duration, notifType)
+		local accent = C.ACCENT
+		if notifType == "success" then accent = C.SUCCESS
+		elseif notifType == "warning" then accent = C.WARNING
+		elseif notifType == "error"   then accent = C.ERR end
+		pushNotif(title, text, duration or 3, accent)
+	end
+
+	return winAPI
 end
 
-return Hub
+return Lib
